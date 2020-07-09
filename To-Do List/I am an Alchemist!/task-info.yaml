@@ -171,6 +171,9 @@ files:
     td = ToDo()
     td.run()
   learner_created: true
+- name: todo.db
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/105/stages/571/implement
-status: Unchecked
+status: Solved
 record: -1
