@@ -1,0 +1,25 @@
+type: code
+files:
+- name: task.py
+  visible: true
+  text: |-
+    def final_deposit_amount(amount=1000, interest):
+        pass
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/9554
+status: Failed
+feedback:
+  message: |
+    Failed test #1 of 3. Wrong answer
+
+    This is a sample test from the problem statement!
+
+    Test input:
+    5 7 4
+    Correct output:
+    1168.44
+
+    Your code output:
+    Your function should accept a varying number of values and the keyword `amount`.
+  time: Fri, 10 Jul 2020 13:15:28 UTC
+record: -1
