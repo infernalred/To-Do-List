@@ -25,7 +25,8 @@ session = Session()
 
 class ToDo:
     def __init__(self):
-        self.list_menu = {1: "Today's tasks", 2: "Week's tasks", 3: "All tasks", 4: "Add task", 0: "Exit"}
+        self.list_menu = {1: "Today's tasks", 2: "Week's tasks", 3: "All tasks",
+                          4: "Missed tasks", 5: "Add task", 6: "Delete task", 0: "Exit"}
 
     def menu(self):
         for k, v in self.list_menu.items():
@@ -45,7 +46,6 @@ class ToDo:
             print()
 
     def print_all_tasks(self, tasks):
-        print("All tasks:")
         i = 1
         for task in tasks:
             print(f"{i}. {task.task}. {task.deadline.strftime('%d %b')}")
@@ -66,11 +66,31 @@ class ToDo:
 
     def all_tasks(self):
         row = session.query(Table).all()
+        print("All tasks:")
+        self.print_all_tasks(row)
+
+    def all_tasks_for_del(self):
+        row = session.query(Table).order_by(Table.deadline).all()
+        print("Chose the number of the task you want to delete:")
+        self.print_all_tasks(row)
+
+    def missed_tasks(self):
+        row = session.query(Table).filter(Table.deadline < datetime.now().date()).all()
+        print("Missed tasks:")
         self.print_all_tasks(row)
 
     def task_add(self, task, deadline):
         new_row = Table(task=task, deadline=deadline)
         session.add(new_row)
+        session.commit()
+        return 0
+
+    def task_delete(self, task_id):
+        rows = session.query(Table).filter(Table.deadline < datetime.today()).all()
+        specific_row = rows[0]  # in case rows is not empty
+        if specific_row == 0:
+            return 1
+        session.delete(specific_row)
         session.commit()
         return 0
 
@@ -85,6 +105,8 @@ class ToDo:
             elif choose == "3":
                 self.all_tasks()
             elif choose == "4":
+                self.missed_tasks()
+            elif choose == "5":
                 print("Enter task")
                 task = input()
                 print("Enter deadline")
@@ -92,6 +114,13 @@ class ToDo:
                 deadline = datetime.strptime(dead, '%Y-%m-%d').date()
                 if self.task_add(task, deadline) == 0:
                     print("The task has been added!")
+            elif choose == "6":
+                self.all_tasks_for_del()
+                task_id = int(input())
+                if self.task_delete(task_id) == 0:
+                    print("The task has been deleted!")
+                else:
+                    print("Nothing to delete!")
             elif choose == "0":
                 print("Bye!")
                 break
